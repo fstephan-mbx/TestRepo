@@ -17,3 +17,7 @@ jobs:
         uses: korthout/backport-action@c656f5d5851037b2b38fb5db2691a03fa229e3b2 # v4.0.1
         with:
           add_author_as_assignee: true
+          pull_description: |-
+            Backport of #${pull_number} to `${target_branch}`.
+
+            /cc @${pull_author}
