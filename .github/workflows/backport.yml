@@ -1,7 +1,7 @@
 name: Backport merged pull request
 on:
-  issue_comment:
-    types: [created]
+  pull_request_target:
+    types: [closed]
 permissions:
   contents: write # so it can comment
   pull-requests: write # so it can create pull requests
@@ -9,15 +9,8 @@ jobs:
   backport:
     name: Backport pull request
     runs-on: ubuntu-latest
-
-    # Only run when a comment starting with `/backport` is created by someone other than the
-    # https://github.com/backport-action bot user (user id: 97796249). Note that if you use your
-    # own PAT as `github_token`, that you should replace this id with yours.
-    if: >
-      github.event_name == 'issue_comment' &&
-        github.event.issue.pull_request &&
-        github.event.comment.user.id != 97796249 &&
-        startsWith(github.event.comment.body, '/backport')
+    # Don't run on closed unmerged pull requests
+    if: github.event.pull_request.merged
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Create backport pull requests
